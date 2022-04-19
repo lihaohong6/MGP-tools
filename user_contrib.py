@@ -70,7 +70,7 @@ def get_contributions(username: str) -> list:
     return contributions
 
 
-def plot_contributions(t: list):
+def plot_contributions(t: list, username: str):
     # 部分操作系统中，matplotlib的默认字体不支持中文，因此需要手动指定字体。
     matplotlib.rcParams['font.family'] = "Heiti TC"
     matplotlib.rcParams['axes.unicode_minus'] = False
@@ -82,12 +82,16 @@ def plot_contributions(t: list):
     patches, texts = plt.pie(edits, labels=namespaces)
     plt.legend(patches, [f"{p[0]}: {p[1]}" for p in t], loc='center right',
                bbox_to_anchor=(0, 0.5), fontsize=15)
+    plt.title(f"用户 {username} 的贡献")
     plt.savefig("cache/pie.png")
     plt.show()
     # 第二张图：柱状图
     plt.figure(2, [len(namespaces), 6])
-    bar_plot = plt.bar(namespaces, edits, color=[p.get_facecolor() for p in patches])
+    bar_plot = plt.bar(x=namespaces, height=edits, color=[p.get_facecolor() for p in patches])
     plt.bar_label(bar_plot)
+    plt.title(f"用户 {username} 的贡献")
+    plt.xlabel("名字空间")
+    plt.ylabel("编辑数")
     plt.savefig("cache/bar.png")
     plt.show()
 
@@ -107,9 +111,9 @@ def process_contributions(username: str):
     # 按照编辑次数给所有名字空间排序
     t = sorted(list(counter.items()), key=lambda p: p[1], reverse=True)
     # 输出数据
-    print(t)
+    print("\n".join([f"{p[0]}: {p[1]}" for p in t]))
     # 画图
-    plot_contributions(t)
+    plot_contributions(t, username)
 
 
 def main():
