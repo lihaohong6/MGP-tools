@@ -3,6 +3,8 @@ pywikibot.lwp
 throttle.ctrl
 apicache-py3/
 logs/
+sandbox.*
+*.spec
 
 .DS_Store
 
