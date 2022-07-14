@@ -1,5 +1,6 @@
 import collections
 import json
+import platform
 import urllib
 from pathlib import Path
 
@@ -99,7 +100,10 @@ def plot_bar(t: list, patches: list, username: str, y_label: str):
 
 def init_plotting():
     # 部分操作系统中，matplotlib的默认字体不支持中文，因此需要手动指定字体。
-    matplotlib.rcParams['font.family'] = "Heiti TC"
+    if "Windows" in platform.platform():
+        matplotlib.rcParams['font.family'] = "Microsoft YaHei"
+    else:
+        matplotlib.rcParams['font.family'] = "Heiti TC"
     matplotlib.rcParams['axes.unicode_minus'] = False
 
 
