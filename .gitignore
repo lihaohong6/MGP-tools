@@ -10,6 +10,7 @@ sandbox.*
 
 /cache
 .idea/
+/data
 
 __pycache__
 
