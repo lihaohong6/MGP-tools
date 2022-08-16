@@ -38,7 +38,7 @@ def get_album_template(producer_id: str) -> str:
 
 def make_template(producer_id: str):
     songs = get_producer_songs(producer_id)
-    songs = [s for s in songs if len(s.videos) > 0]
+    songs = [s for s in songs if len(s.videos) > 0 and s.original]
     sorted(songs, key=lambda s: s.publish_date)
     original_songs = get_original_songs_template(songs)
     return "{{大家族\n|name=\n|title=\n" + \
@@ -50,4 +50,5 @@ def make_template(producer_id: str):
 
 
 if __name__ == "__main__":
-    print(make_template("2226"))
+    target = input("Vocadb id?").strip()
+    print(make_template(target))
