@@ -96,7 +96,7 @@ def make_template(producer_id: str):
     # get cookies, see bilibili-API-collect for more information
     session.get("https://bilibili.com")
     for s in songs:
-        with open(p, "w") as f:
+        with open(p, "w", encoding="utf-8") as f:
             f.write(make_string())
         titles = search_bb_for_titles(session, s)
         print("====== " + s.name_ja + " ======")
