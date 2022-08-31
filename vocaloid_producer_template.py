@@ -1,15 +1,14 @@
 import platform
 from textwrap import indent
-from typing import List, Optional
+from threading import Thread
+from typing import List
 
 import requests
 from mgp_common.config import get_cache_path
-from mgp_common.japanese import is_japanese
 from mgp_common.string_utils import auto_lj
 from mgp_common.video import VideoSite
 from mgp_common.vocadb import get_producer_songs, get_producer_albums, Song
 from requests import Session
-
 
 BOLD_START = '\033[1m'
 BOLD_END = '\033[0m'
@@ -85,6 +84,17 @@ def search_bb_for_titles(session: Session, s: Song) -> List[str]:
             for t in set(result)]
 
 
+class SearchThread(Thread):
+    def __init__(self, session: Session, s: Song):
+        super().__init__()
+        self.session = session
+        self.s = s
+        self.result = []
+
+    def run(self) -> None:
+        self.result = search_bb_for_titles(self.session, self.s)
+
+
 def make_template(producer_id: str):
     songs = get_producer_songs(producer_id)
     songs = [s for s in songs if len(s.videos) > 0 and s.original]
@@ -104,10 +114,17 @@ def make_template(producer_id: str):
     session = requests.Session()
     # get cookies, see bilibili-API-collect for more information
     session.get("https://bilibili.com")
-    for s in songs:
+    search_task = SearchThread(session, songs[0])
+    search_task.start()
+    for index, s in enumerate(songs):
         with open(p, "w", encoding="utf-8") as f:
             f.write(make_string())
-        titles = search_bb_for_titles(session, s)
+        search_task.join()
+        titles = search_task.result
+        # start loading the info the for next song
+        if index < len(songs) - 1:
+            search_task = SearchThread(session, songs[index + 1])
+            search_task.start()
         print("====== " + s.name_ja + " ======")
         print("\n".join(titles))
         options = ["Keep original.", *s.name_other,
