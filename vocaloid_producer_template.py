@@ -1,3 +1,4 @@
+import platform
 from textwrap import indent
 from typing import List, Optional
 
@@ -8,6 +9,14 @@ from mgp_common.string_utils import auto_lj
 from mgp_common.video import VideoSite
 from mgp_common.vocadb import get_producer_songs, get_producer_albums, Song
 from requests import Session
+
+
+BOLD_START = '\033[1m'
+BOLD_END = '\033[0m'
+
+if platform.system() == 'Windows':
+    BOLD_START = ""
+    BOLD_END = ""
 
 
 def song_to_link(s: Song) -> str:
@@ -68,8 +77,8 @@ def search_bb_for_titles(session: Session, s: Song) -> List[str]:
         if v.site == VideoSite.NICO_NICO:
             result.extend(search_bb_keyword(session, v.url[v.url.rfind('/') + 1:]))
     result.extend(search_bb_keyword(session, s.name_ja))
-    return [t.replace('<em class="keyword">', '\033[1m')
-                .replace('</em>', '\033[0m')
+    return [t.replace('<em class="keyword">', BOLD_START)
+                .replace('</em>', BOLD_END)
                 .replace('&quot;', '"')
                 .replace('&amp;', '&')
                 .replace('&#39;', "'")
