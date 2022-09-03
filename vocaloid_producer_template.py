@@ -98,7 +98,7 @@ class SearchThread(Thread):
 def make_template(producer_id: str):
     songs = get_producer_songs(producer_id)
     songs = [s for s in songs if len(s.videos) > 0 and s.original]
-    sorted(songs, key=lambda s: s.publish_date)
+    sorted(songs, key=lambda s: s.publish_date, reverse=True)
     album_template = get_album_template(producer_id)
 
     def make_string():
