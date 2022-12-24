@@ -38,9 +38,9 @@ def get_original_songs_template(songs: List[Song]):
         prev.append(s)
         year_to_songs[s.publish_date.year] = prev
     year_strings = []
-    for year in sorted(year_to_songs.keys()):
-        s = "|" + str(year) + "年\n" + \
-            "|{{links|" + "|".join(song_to_link(s) for s in year_to_songs[year]) + "}}"
+    for index, year in enumerate(sorted(year_to_songs.keys())):
+        s = f"|group{index + 1} = " + str(year) + "年\n" + \
+            f"|list{index + 1} = " + "{{links|" + "|".join(song_to_link(s) for s in year_to_songs[year]) + "}}"
         year_strings.append(s)
     return "\n".join(year_strings)
 
@@ -49,8 +49,8 @@ def get_album_template(producer_id: str) -> str:
     albums = get_producer_albums(producer_id, only_main=True)
     if len(albums) == 0:
         return ""
-    return "|专辑\n" + \
-           "|{{lj|{{links|" + "|".join(albums) + "}}}}\n"
+    return "|group2 = 专辑\n" + \
+           "|list2 = {{lj|{{links|" + "|".join(albums) + "}}}}\n"
 
 
 def search_bb_keyword(session: Session, keyword: str):
@@ -103,10 +103,11 @@ def make_template(producer_id: str):
 
     def make_string():
         original_songs = get_original_songs_template(songs)
-        return "{{大家族\n|name=\n|title=\n" + \
-               "|state={{#ifeq:{{{1}}}|collapsed|mw-collapsible mw-collapsed|mw-uncollapsed}}\n" + \
-               "|原创投稿曲目\n" + \
-               "|{{大家族模板子项\n" + indent(original_songs + "}}", prefix="  ") + "\n" + \
+        return "{{Navbox\n|name =\n|title =\n" + \
+               "|state = {{#ifeq:{{{1}}}|collapsed|mw-collapsible mw-collapsed|mw-uncollapsed}}\n" + \
+               "|titlestyle =\n|groupstyle =\n|liststyle =\n" + \
+               "|group1 = 原创投稿曲目\n" + \
+               "|list1 = {{Navbox_subgroup\n" + indent(original_songs + "}}", prefix="  ") + "\n" + \
                album_template + \
                "}}"
 

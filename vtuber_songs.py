@@ -167,11 +167,9 @@ def main():
     # videos = get_videos_in_channel(s)
     # videos2 = filter_videos(get_user_videos(140378), ["翻唱", "V家", "中文版"])
     # videos = merge_video_lists(videos2, videos1)
-    videos = list(get_user_videos(uid=63231, search="崩坏"))
+    videos = list(get_user_videos(uid=386900246, search="原创"))
     write_videos_to_file(videos)
 
 
 if __name__ == "__main__":
-    # bv_subtract("data/all.txt", "data/in.txt")
-    duplicate_bv("data/in.txt", 2)
-    # main()
+    main()
