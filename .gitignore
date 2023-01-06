@@ -11,6 +11,9 @@ sandbox.*
 /cache
 .idea/
 /data
+/env
+/build
+/dist
 
 __pycache__
 
