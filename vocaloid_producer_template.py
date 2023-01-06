@@ -22,8 +22,6 @@ def song_to_link(s: Song) -> str:
     name_ja = s.name_ja
     if s.name_chs is not None:
         trans = s.name_chs
-    elif len(s.name_other) == 1:
-        trans = s.name_other[0]
     elif name_ja.isascii():
         return name_ja
     else:
