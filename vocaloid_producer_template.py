@@ -39,8 +39,9 @@ def get_original_songs_template(songs: List[Song]):
         year_to_songs[s.publish_date.year] = prev
     year_strings = []
     for index, year in enumerate(sorted(year_to_songs.keys())):
+        song_list = sorted(year_to_songs[year], key=lambda song: song.publish_date)
         s = f"|group{index + 1} = " + str(year) + "年\n" + \
-            f"|list{index + 1} = " + "{{links|" + "|".join(song_to_link(s) for s in year_to_songs[year]) + "}}"
+            f"|list{index + 1} = " + "{{links|" + "|".join(song_to_link(s) for s in song_list) + "}}"
         year_strings.append(s)
     return "\n".join(year_strings)
 
@@ -98,7 +99,7 @@ class SearchThread(Thread):
 def make_template(producer_id: str):
     songs = get_producer_songs(producer_id)
     songs = [s for s in songs if len(s.videos) > 0 and s.original]
-    sorted(songs, key=lambda s: s.publish_date, reverse=True)
+    songs = sorted(songs, key=lambda s: s.publish_date)
     album_template = get_album_template(producer_id)
 
     def make_string():
